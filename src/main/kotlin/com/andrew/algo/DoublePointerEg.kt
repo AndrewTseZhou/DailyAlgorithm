@@ -2,6 +2,7 @@ package com.andrew.algo
 
 import java.util.*
 
+
 /**
  * @author Andrew Tse
  * @date 2022/7/3
@@ -280,6 +281,40 @@ class DoublePointerTest {
         }
 
         memo[i][j] = if (res) 1 else 0
+        return res
+    }
+
+    /**
+     * eg: 优势洗牌. 田忌赛马思想, 时间复杂度为二叉堆和排序 O(NlogN)
+     * 链接: https://leetcode.cn/problems/advantage-shuffle/
+     */
+    fun advantageCount(nums1: IntArray, nums2: IntArray): IntArray {
+        val n = nums1.size
+        // nums2降序排序
+        val priorityQueue = PriorityQueue { pair1: IntArray, pair2: IntArray ->
+            pair2[1] - pair1[1]
+        }
+        for (i in 0 until n) {
+            priorityQueue.offer(intArrayOf(i, nums2[i]))
+        }
+        // nums1升序排序
+        Arrays.sort(nums1)
+
+        var left = 0
+        var right = n - 1
+        val res = IntArray(n)
+        while (priorityQueue.isNotEmpty()) {
+            val pair = priorityQueue.poll()
+            val index = pair[0]
+            val maxVal = pair[1]
+            if (maxVal < nums1[right]) {
+                res[index] = nums1[right]
+                right--
+            } else {
+                res[index] = nums1[left]
+                left++
+            }
+        }
         return res
     }
 }
